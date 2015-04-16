@@ -1,81 +1,100 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
-<html lang="en" ng-app>
-  <head>
-    <meta charset="utf-8">
-    <title>{% block title %}biosys{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content="{% block description %}{% endblock %}"/>
+    <meta name="keywords" content="{% block keywords %}{% endblock %}"/>
+    <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1{% endblock viewport %}"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>{% block title %}Biosys{% endblock title %}</title>
+
+{#    <link rel="icon" type="image/gif" href="{% static 'images/favicon.gif' %}">#}
 
     {% block css %}
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-
-    <!-- Your stuff: Third-party css libraries go here -->
-
-    <!-- This file store project specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/project.css' %}" rel="stylesheet">
     {% endblock %}
+    {% block additional_css %}{% endblock %}
 
-    {% block angular %}
-      <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    {% endblock %}
 
-  </head>
+</head>
 
-  <body>
-
-    <div class="header navbar">
-      <div class="container">
-        <a class="navbar-brand" href="/">biosys</a>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
-
-          {% if request.user.is_authenticated %}
-            <li><a href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a></li>
-            <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
-          {% else %}
-            <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
-            <li><a href="{% url 'account_login' %}">{% trans "Log In" %}</a></li>
-          {% endif %}
-        </ul>
-      </div>
+<body>
+<div class="container-fluid">
+    <div class="modal fade" id="waitModal" tabindex="-1" role="dialog" aria-labelledby="waitModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="waitMessage">Processing request. Please wait...</h4>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {% block header %}
+                {% include "header.html" %}
+            {% endblock header %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            {% block content %}
+                {% block message %}
+                    <div class="row">
+                        {% if messages %}
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-lg-offset-4">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible text-center info_bar">
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <span aria-hidden="true">&times;</span>
+                                        <span class="sr-only">Close</span>
+                                    </button>
+                                        <span><strong>{{ message }}</strong></span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endblock %}
+                <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="navbar">
+                            {% block navbar %}
+                            {% include "navbar.html" %}
+                            {% endblock %}
+                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="main-content">
+                        {% block main-content %}
 
-    <div class="container">
-        
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
-          {% endfor %}
-      {% endif %}
-
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-
-    </div> <!-- /container -->
-    
-    {% block modal %}{% endblock modal %}
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+                        {% endblock %}
+                    </div>
+                </div>
+            {% endblock content %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {% block footer %}
+                {% include "footer.html" %}
+            {% endblock footer %}
+        </div>
+    </div>
+</div>
     {% block javascript %}
-      <!-- Latest JQuery -->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
-      <!-- Latest compiled and minified JavaScript -->
-      <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-      <!-- Your stuff: Third-party javascript libraries go here -->
-
-      <!-- place project specific Javascript in this file -->
-      <script src="{% static 'js/project.js' %}"></script>
+        <script src="{% static 'js/libs/jquery-2.1.3.min.js' %}"></script>
+        <script src="{% static 'js/libs/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/libs/moment.min.js' %}"></script>
+        <script src="{% static 'js/libs/lodash.js' %}"></script>
+        <script src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
-  </body>
+    {% block additional_js %}{% endblock %}
+
+</body>
 </html>
- 
