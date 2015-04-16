@@ -1,0 +1,18 @@
+# Basics
+*.py[cod]
+*.pyc
+__pycache__
+
+# Pycharm
+.idea
+
+# Vim
+*~
+*.swp
+*.swo
+
+# npm
+node_modules/
+
+# everything with local in it
+*local*
