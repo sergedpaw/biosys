@@ -14,5 +14,9 @@ __pycache__
 # npm
 node_modules/
 
+# logs
+log/
+*.log
+
 # everything with local in it
 *local*
