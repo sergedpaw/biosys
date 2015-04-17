@@ -46,6 +46,7 @@ INSTALLED_APPS = (
 
 PROJECT_APPS = (
     'main',
+    'spike',
 )
 
 INSTALLED_APPS += PROJECT_APPS
